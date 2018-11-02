@@ -37,9 +37,17 @@ public class GeneticAlgorithm {
         this.populationSize = populationSize;
         this.numberOfGenerations = numberOfGenerations;
         this.chromosomeSize = chromosomeSize;
+        this.probabilityOfMutation = calcRandMutationRate();
     }
     
-    private void run(int selectionType) {
+    public GeneticAlgorithm(int populationSize, int numberOfGenerations, int chromosomeSize, double probabilityOfMutation) {
+        this.populationSize = populationSize;
+        this.numberOfGenerations = numberOfGenerations;
+        this.chromosomeSize = chromosomeSize;
+        this.probabilityOfMutation = probabilityOfMutation;
+    }
+    
+    public void run(int selectionType) {
         //SET each individuals genes to be 1 or 0 at random
         for (int i = 0; i < population.length; i++) {
             int[] genes = new int[chromosomeSize];
@@ -202,7 +210,7 @@ public class GeneticAlgorithm {
 
         for (int i = 0; i < chromosomeSize; i++) {
             double m = Math.random();
-            if (mutationRates[probabilityOfMutation] >= m) {
+            if (probabilityOfMutation >= m) {
                 mutatedGenes[i] = invert(chrom[i]);
             }
         }
@@ -220,79 +228,10 @@ public class GeneticAlgorithm {
     //END_Mutation
 
     //START_Fitness
-   
-    private Individual[] calcCountOnesFitness(Individual[] pop) {
-        Individual[] newPop = new Individual[pop.length];
-
-        for (int i = 0; i < pop.length; i++) {
-            int fitness = 0;
-            int[] genes = pop[i].getChromosome();
-            for (int j = 0; j < genes.length; j++) {
-                if (genes[j] == 1) {
-                    fitness++;
-                }
-            }
-            newPop[i] = new Individual(genes, fitness);
-        }
-        return newPop;
+    private static Individual[] calcFitness(Individual[] pop) {
+        return null;
     }
-
-    private Individual[] calcXSquaredFitness(Individual[] pop) {
-        Individual[] newPop = new Individual[pop.length];
-
-        for (int i = 0; i < pop.length; i++) {
-            int fitness = 0;
-            int[] genes = pop[i].getChromosome();
-            for (int j = 0; j < genes.length; j++) {
-                if (genes[j] == 1) {
-                    fitness += Math.pow(2, j);
-                }
-            }
-            fitness = (int) Math.pow(fitness, 2);
-            newPop[i] = new Individual(genes, fitness);
-        }
-        return newPop;
-    }
-
-    private Individual[] calcXYFuncFitness(Individual[] pop) {
-        Individual[] newPop = new Individual[pop.length];
-
-        for (int i = 0; i < pop.length; i++) {
-            int fitness;
-            int[] genes = pop[i].getChromosome();
-            int x = 0, y = 0, exp = 0, fp;
-
-            //GET X
-            fp = genes[0];
-            for (int j = 1; j < 5; j++) {
-                if (genes[j] == 1) {
-                    x += Math.pow(2, exp);
-                }
-                exp++;
-            }
-            if (fp == 1) {
-                x = (0 - x);
-            }
-
-            //GET Y
-            exp = 0;
-            fp = genes[5];
-            for (int j = 6; j < 10; j++) {
-                if (genes[j] == 1) {
-                    y += Math.pow(2, exp);
-                }
-                exp++;
-            }
-            if (fp == 1) {
-                y = (0 - y);
-            }
-
-            fitness = (int) (0.26 * (Math.pow(x, 2) + Math.pow(y, 2)) - 0.48 * x * y);
-            newPop[i] = new Individual(genes, fitness);
-        }
-        return newPop;
-    }
-
+    
     private int avgFitness(Individual[] pop) {
         return sumFitness(pop) / pop.length;
     }
