@@ -228,7 +228,7 @@ public class GeneticAlgorithm {
     //END_Mutation
 
     //START_Fitness
-    private static Individual[] calcFitness(Individual[] pop) {
+    private Individual[] calcFitness(Individual[] pop) {
         return null;
     }
     
